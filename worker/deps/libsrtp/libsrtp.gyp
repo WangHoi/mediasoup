@@ -138,7 +138,7 @@
       'conditions': [
         [ 'use_openssl == 1', {
           'dependencies': [
-            '<(DEPTH)/deps/openssl/openssl.gyp:openssl',
+            # '<(DEPTH)/deps/openssl/openssl.gyp:openssl',
           ],
           'sources!': [
             'srtp/crypto/cipher/aes_icm.c',
@@ -149,6 +149,9 @@
             'srtp/crypto/cipher/aes_gcm_ossl.c',
             'srtp/crypto/cipher/aes_icm_ossl.c',
             'srtp/crypto/hash/hmac_ossl.c',
+          ],
+          'include_dirs': [
+            '/root/projects/boring/boring-sys/deps/boringssl/src/include',
           ],
         }],
       ],

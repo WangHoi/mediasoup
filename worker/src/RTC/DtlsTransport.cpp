@@ -584,10 +584,16 @@ namespace RTC
 
 		// Set the MTU so that we don't send packets that are too large with no fragmentation.
 		SSL_set_mtu(this->ssl, DtlsMtu);
+#ifndef OPENSSL_IS_BORINGSSL
 		DTLS_set_link_mtu(this->ssl, DtlsMtu);
+#endif
 
+#ifndef OPENSSL_IS_BORINGSSL
 		// Set callback handler for setting DTLS timer interval.
 		DTLS_set_timer_cb(this->ssl, onSslDtlsTimer);
+#else
+		DTLSv1_set_initial_timeout_duration(this->ssl, 100);
+#endif
 
 		// Set the DTLS timer.
 		this->timer = new Timer(this);
@@ -1032,7 +1038,14 @@ namespace RTC
 
 		// NOTE: If ret == 0 then ignore the value in dtlsTimeout.
 		// NOTE: No DTLSv_1_2_get_timeout() or DTLS_get_timeout() in OpenSSL 1.1.0-dev.
+#ifndef OPENSSL_IS_BORINGSSL
 		ret = DTLSv1_get_timeout(this->ssl, static_cast<void*>(&dtlsTimeout)); // NOLINT
+#else
+		struct timeval tval{ 0, 0 };
+		ret = DTLSv1_get_timeout(this->ssl, &tval);
+		dtlsTimeout.tv_sec = tval.tv_sec;
+		dtlsTimeout.tv_usec = tval.tv_usec;
+#endif
 
 		if (ret == 0)
 			return true;
@@ -1353,7 +1366,7 @@ namespace RTC
 
 		// Ensure that the SRTP crypto suite has been negotiated.
 		// NOTE: This is a OpenSSL type.
-		SRTP_PROTECTION_PROFILE* sslSrtpCryptoSuite = SSL_get_selected_srtp_profile(this->ssl);
+		const SRTP_PROTECTION_PROFILE* sslSrtpCryptoSuite = SSL_get_selected_srtp_profile(this->ssl);
 
 		if (!sslSrtpCryptoSuite)
 			return negotiatedSrtpCryptoSuite;
