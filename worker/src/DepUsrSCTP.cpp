@@ -6,6 +6,7 @@
 #include "Logger.hpp"
 #include <usrsctp.h>
 #include <mutex>
+#include <stdarg.h>
 
 /* Static. */
 
