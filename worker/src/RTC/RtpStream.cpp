@@ -121,21 +121,21 @@ namespace RTC
 			InitSeq(seq);
 
 			this->started     = true;
-			this->maxSeq      = seq - 1;
+			this->maxSeq      = seq;
 			this->maxPacketTs = packet->GetTimestamp();
 			this->maxPacketMs = DepLibUV::GetTimeMs();
-		}
+		} else {
+			// If not a valid packet ignore it.
+			if (!UpdateSeq(packet))
+			{
+				MS_WARN_TAG(
+				rtp,
+				"invalid packet [ssrc:%" PRIu32 ", seq:%" PRIu16 "]",
+				packet->GetSsrc(),
+				packet->GetSequenceNumber());
 
-		// If not a valid packet ignore it.
-		if (!UpdateSeq(packet))
-		{
-			MS_WARN_TAG(
-			  rtp,
-			  "invalid packet [ssrc:%" PRIu32 ", seq:%" PRIu16 "]",
-			  packet->GetSsrc(),
-			  packet->GetSequenceNumber());
-
-			return false;
+				return false;
+			}
 		}
 
 		// Update highest seen RTP timestamp.
