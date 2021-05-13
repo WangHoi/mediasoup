@@ -758,6 +758,7 @@ namespace RTC
 		if (static_cast<float>((nowMs - this->lastRtcpSentTime) * 1.15) < this->maxRtcpInterval)
 			return;
 
+		packet->SetLocalSsrc(this->localSsrc);
 		for (auto& kv : this->mapSsrcRtpStream)
 		{
 			auto* rtpStream = kv.second;
@@ -783,6 +784,13 @@ namespace RTC
 		}
 
 		this->lastRtcpSentTime = nowMs;
+	}
+
+	void Producer::SetLocalSsrc(uint32_t ssrc)
+	{
+		MS_TRACE();
+
+		this->localSsrc = ssrc;
 	}
 
 	void Producer::RequestKeyFrame(uint32_t mappedSsrc)

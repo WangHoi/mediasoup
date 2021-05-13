@@ -116,6 +116,13 @@ namespace RTC
 			MS_DUMP("</CompoundPacket>");
 		}
 
+		void CompoundPacket::SetLocalSsrc(uint32_t ssrc)
+		{
+			MS_TRACE();
+			this->receiverReportPacket.SetSsrc(ssrc);
+			this->xrPacket.SetSsrc(ssrc);
+		}
+
 		void CompoundPacket::AddSenderReport(SenderReport* report)
 		{
 			MS_TRACE();

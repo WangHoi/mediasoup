@@ -35,6 +35,7 @@ namespace RTC
 				return this->receiverReportPacket.GetCount();
 			}
 			void Dump();
+			void SetLocalSsrc(uint32_t ssrc);
 			void AddSenderReport(SenderReport* report);
 			void AddReceiverReport(ReceiverReport* report);
 			void AddSdesChunk(SdesChunk* chunk);

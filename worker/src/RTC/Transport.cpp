@@ -844,6 +844,15 @@ namespace RTC
 					throw;
 				}
 
+				// First Consumer: update the Producer local ssrc.
+				if (this->mapConsumers.empty() && !consumer->GetMediaSsrcs().empty()) {
+					auto it = this->mapProducers.find(producerId);
+					if (it != this->mapProducers.end()) {
+						auto ssrc = consumer->GetMediaSsrcs().front();
+						it->second->SetLocalSsrc(ssrc);
+					}
+				}
+
 				// Insert into the maps.
 				this->mapConsumers[consumerId] = consumer;
 

@@ -122,6 +122,7 @@ namespace RTC
 		void ReceiveRtcpSenderReport(RTC::RTCP::SenderReport* report);
 		void ReceiveRtcpXrDelaySinceLastRr(RTC::RTCP::DelaySinceLastRr::SsrcInfo* ssrcInfo);
 		void GetRtcp(RTC::RTCP::CompoundPacket* packet, uint64_t nowMs);
+		void SetLocalSsrc(uint32_t ssrc);
 		void RequestKeyFrame(uint32_t mappedSsrc);
 
 	private:
@@ -180,6 +181,7 @@ namespace RTC
 		bool videoOrientationDetected{ false };
 		struct VideoOrientation videoOrientation;
 		struct TraceEventTypes traceEventTypes;
+		uint32_t localSsrc{ 1u };
 	};
 } // namespace RTC
 
