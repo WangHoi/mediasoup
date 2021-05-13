@@ -45,7 +45,7 @@ namespace RTC
 
 	private:
 		T base{ 0 };
-		T maxOutput{ 0 };
+		T maxOutput{ MaxValue };
 		T maxInput{ 0 };
 		std::set<T, SeqLowerThan> dropped;
 	};
